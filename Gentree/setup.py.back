@@ -1,0 +1,65 @@
+#some short hands for system/user specific choises and specs
+import configparser
+import prop
+#USER VARS CHANGE THESE ACCORDINGLY
+DISK="nvme0n1"
+DISKPART="p"
+LABEL={
+	'ROOT': 'GENTOO',
+	'ESP' :	'ESP',
+	'DATA':'USERDATA',
+	'HOME': '{DATA}/@home',
+	'USER': '{HOME}/@hoefkens'
+	}
+
+#DEFAULT SYSTEM VARS FOR GENTOO LIVE ISO
+#CFG_PASSWDQC='/etc/security/passwdqc.conf'
+CFG={'PASSWDQC':'test.conf'}
+MAKE='/dev/portage/make.conf'
+
+def set_prop(file,dct):
+	cfg = configparser.ConfigParser()
+
+	def r_props(f_props):
+		def add_header(props_file):
+			yield '[{}]\n'.format('#')
+			for line in props_file:
+				yield line
+		with open(f_props) as file:
+			file = file.readlines()
+		cfg.read_file(add_header(file), source=f_props)
+		return cfg['#']
+		
+	def w_props(properties_file,props):
+		cfg['#']= props
+		with open(properties_file, 'w') as configfile:
+			cfg.write(configfile)
+		with open(properties_file, 'r') as fin:
+			data = fin.read().splitlines(True)
+			for idx,line in enumerate(data):
+				data[idx] = f'{"".join(line.split())}\n'
+			data[0]='\n'
+		with open(properties_file, 'w') as fout:
+			fout.writelines(data)
+	props = r_props(file)
+	props[list(dct.keys())[0]]=dct[list(dct.keys())[0]]
+	w_props(file, props)
+	
+def main():
+	set_prop(CFG['PASSWDQC'],{'enforce':'none'})
+	
+
+	
+	
+
+
+
+#with open(CFG_PASSWDQC, rW) as script:
+#	stmts=script.readlines()
+
+#for stmt in stmts:
+#	print(f'{stmt}')
+
+if __name__ == '__main__':
+	main()
+ 

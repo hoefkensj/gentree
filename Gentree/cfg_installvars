@@ -1,0 +1,24 @@
+[BOOT]
+BIOS: UEFI
+
+[STORAGE]
+TYPE_01 	:	NVME
+TYPE_02		:	FILE
+ID_01		:	/dev/nvme0n1
+ID_02		:	/var/.8BiB-gentoo.swp
+
+
+[STORE_PART01]
+part :	p1
+size :	1
+fs	 :	vfat
+
+
+
+LABEL={
+	'ROOT': 'GENTOO',
+	'ESP' :	'ESP',
+	'DATA':'USERDATA',
+	'HOME': '{DATA}/@home',
+	'USER': '{HOME}/@hoefkens'
+	}
